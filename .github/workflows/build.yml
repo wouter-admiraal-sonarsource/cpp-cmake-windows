@@ -39,12 +39,13 @@ jobs:
       - name: Build and analyse the project
         shell: powershell
         run: |
+          $env:Path += ";$HOME/.sonar/build-wrapper-win-x86;$HOME/.sonar/sonar-scanner-4.6.2.2472-windows/bin"
           mkdir build
           cd build
           cmake ..
           cd ..
-          $HOME/.sonar/build-wrapper-win-x86-64/build-wrapper-win-x86-64 --out-dir bw-output cmake --build build/ --config Release
-          $HOME/.sonar/sonar-scanner-4.6.2.2472-windows/bin/sonar-scanner.bat -Dsonar.cfamily.build-wrapper-output=bw-output
+          build-wrapper-win-x86-64 --out-dir bw-output cmake --build build/ --config Release
+          sonar-scanner.bat -Dsonar.cfamily.build-wrapper-output=bw-output
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed because targetting SonarCloud here
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
