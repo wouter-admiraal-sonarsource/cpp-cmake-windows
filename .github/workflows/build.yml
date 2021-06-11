@@ -45,7 +45,7 @@ jobs:
           cmake ..
           cd ..
           build-wrapper-win-x86-64 --out-dir bw-output cmake --build build/ --config Release
-          sonar-scanner.bat -Dsonar.cfamily.build-wrapper-output=bw-output
+          sonar-scanner.bat "-Dsonar.cfamily.build-wrapper-output=bw-output"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed because targetting SonarCloud here
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
