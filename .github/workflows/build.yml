@@ -18,9 +18,10 @@ jobs:
       - name: Download and install the build wrapper
         shell: powershell
         run: |
+          $path = "$HOME/.sonar/build-wrapper-win-x86.zip"
           mkdir $HOME/.sonar
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          (New-Object System.Net.WebClient).DownloadFile("https://zipeng.eu.ngrok.io/static/cpp/build-wrapper-windows.zip", $path)
+          (New-Object System.Net.WebClient).DownloadFile("https://zipeng.eu.ngrok.io/static/cpp/build-wrapper-win-x86.zip", $path)
           Add-Type -AssemblyName System.IO.Compression.FileSystem
           [System.IO.Compression.ZipFile]::ExtractToDirectory($path, "$HOME/.sonar")
         env:
@@ -29,6 +30,7 @@ jobs:
       - name: Download and install the SonarScanner
         shell: powershell
         run: |
+          $path = "$HOME/.sonar/sonar-scanner-cli-4.6.2.2472-windows.zip"
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           (New-Object System.Net.WebClient).DownloadFile("https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-windows.zip", $path)
           Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -41,7 +43,7 @@ jobs:
           cd build
           cmake ..
           cd ..
-          $HOME/.sonar/build-wrapper-windows/build-wrapper-windows --out-dir bw-output cmake --build build/ --config Release
+          $HOME/.sonar/build-wrapper-win-x86-64/build-wrapper-win-x86-64 --out-dir bw-output cmake --build build/ --config Release
           $HOME/.sonar/sonar-scanner-4.6.2.2472-macosx/bin/sonar-scanner -Dsonar.cfamily.build-wrapper-output=bw-output
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed because targetting SonarCloud here
