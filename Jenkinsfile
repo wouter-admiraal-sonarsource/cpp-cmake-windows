@@ -6,7 +6,7 @@ node {
     powershell "$path = \"$HOME/.sonar/build-wrapper-win-x86.zip\""
     powershell "mkdir $HOME/.sonar"
     powershell "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12"
-    powershell "(New-Object System.Net.WebClient).DownloadFile(\"https://zipeng.eu.ngrok.io/static/cpp/build-wrapper-win-x86.zip\", $path)"
+    powershell "(New-Object System.Net.WebClient).DownloadFile(\"http://10.42.0.1:9000/static/cpp/build-wrapper-win-x86.zip\", $path)"
     powershell "Add-Type -AssemblyName System.IO.Compression.FileSystem"
     powershell "[System.IO.Compression.ZipFile]::ExtractToDirectory($path, \"$HOME/.sonar\")"
   }
