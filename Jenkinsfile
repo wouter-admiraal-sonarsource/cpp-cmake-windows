@@ -5,6 +5,8 @@ node {
   stage('Download Build Wrapper') {
     powershell '''
       $path = "$HOME/.sonar/build-wrapper-win-x86.zip"
+      rm build-wrapper-win-x86 -Recurse -Force -ErrorAction SilentlyContinue
+      rm $path -Force -ErrorAction SilentlyContinue
       mkdir $HOME/.sonar
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       (New-Object System.Net.WebClient).DownloadFile("http://10.42.0.1:9000/static/cpp/build-wrapper-win-x86.zip", $path)
