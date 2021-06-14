@@ -17,6 +17,7 @@ node {
   stage('Build') {
     powershell '''
       $env:Path += ";$HOME/.sonar/build-wrapper-win-x86"
+      rm build -Recurse -Force -ErrorAction SilentlyContinue
       mkdir build
       cd build
       cmake ..
