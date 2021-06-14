@@ -14,11 +14,12 @@ node {
   }
   stage('Build') {
     powershell '''
-      $path = "$HOME/.sonar/sonar-scanner-cli-4.6.2.2472-windows.zip"
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      (New-Object System.Net.WebClient).DownloadFile("https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-windows.zip", $path)
-      Add-Type -AssemblyName System.IO.Compression.FileSystem
-      [System.IO.Compression.ZipFile]::ExtractToDirectory($path, "$HOME/.sonar")
+      $env:Path += ";$HOME/.sonar/build-wrapper-win-x86"
+      mkdir build
+      cd build
+      cmake ..
+      cd ..
+      build-wrapper-win-x86-64 --out-dir bw-output cmake --build build/ --config Release
     '''
   }
   stage('SonarQube Analysis') {
