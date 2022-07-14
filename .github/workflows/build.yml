@@ -40,9 +40,9 @@ jobs:
           [System.IO.Compression.ZipFile]::ExtractToDirectory("$env:SONAR_DIRECTORY/build-wrapper-win-x86.zip", "$env:SONAR_DIRECTORY")
 
       - name: Build and analyse the project
-        shell: bash
+        shell: powershell
         run: |
-          export PATH="$PATH:$HOME/.sonar/build-wrapper-win-x86:$HOME/.sonar/sonar-scanner-4.7.0.2747-windows/bin"
+          env:Path += ";$HOME/.sonar/build-wrapper-win-x86;$HOME/.sonar/sonar-scanner-4.7.0.2747-windows/bin"
           mkdir build
           cd build
           cmake ..
