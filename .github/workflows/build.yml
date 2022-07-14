@@ -48,6 +48,7 @@ jobs:
           $env:SONAR_DIRECTORY = [System.IO.Path]::Combine($(get-location).Path,".sonar")
           $env:SONAR_SCANNER_HOME = "$env:SONAR_DIRECTORY/sonar-scanner-$env:SONAR_SCANNER_VERSION-windows"
           $env:Path += ";$env:SONAR_SCANNER_HOME/bin;$env:SONAR_DIRECTORY/build-wrapper-win-x86"
+          $env:SONAR_SCANNER_OPTS="-server"
           mkdir build
           cd build
           cmake ..
