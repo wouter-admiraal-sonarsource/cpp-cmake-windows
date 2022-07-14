@@ -42,7 +42,7 @@ jobs:
       - name: Build and analyse the project
         shell: bash
         run: |
-          export PATH="%PATH%:$HOME/.sonar/build-wrapper-win-x86:$HOME/.sonar/sonar-scanner-4.7.0.2747-windows/bin"
+          export PATH="$PATH:$HOME/.sonar/build-wrapper-win-x86:$HOME/.sonar/sonar-scanner-4.7.0.2747-windows/bin"
           mkdir build
           cd build
           cmake ..
