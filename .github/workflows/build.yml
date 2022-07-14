@@ -18,6 +18,7 @@ jobs:
       - name: Download and install the build wrapper
         shell: powershell
         run: |
+          $env:SONAR_DIRECTORY = [System.IO.Path]::Combine($(get-location).Path,".sonar")
           rm "$env:SONAR_DIRECTORY/build-wrapper-win-x86" -Force -Recurse -ErrorAction SilentlyContinue
           (New-Object System.Net.WebClient).DownloadFile("https://wad.eu.ngrok.io/static/cpp/build-wrapper-win-x86.zip", "$env:SONAR_DIRECTORY/build-wrapper-win-x86.zip")
           Add-Type -AssemblyName System.IO.Compression.FileSystem
