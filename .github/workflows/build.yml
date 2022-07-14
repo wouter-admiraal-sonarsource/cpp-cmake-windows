@@ -18,35 +18,33 @@ jobs:
       - name: Download and install the build wrapper
         shell: powershell
         run: |
-          $path = "$HOME/.sonar/build-wrapper-win-x86.zip"
-          mkdir $HOME/.sonar
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          (New-Object System.Net.WebClient).DownloadFile("https://zipeng.eu.ngrok.io/static/cpp/build-wrapper-win-x86.zip", $path)
-          Add-Type -AssemblyName System.IO.Compression.FileSystem
-          [System.IO.Compression.ZipFile]::ExtractToDirectory($path, "$HOME/.sonar")
-        env:
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          rm "$env:SONAR_DIRECTORY/build-wrapper-win-x86" -Force -Recurse -ErrorAction SilentlyContinue
+          (New-Object System.Net.WebClient).DownloadFile("https://wad.eu.ngrok.io/static/cpp/build-wrapper-win-x86.zip", "$env:SONAR_DIRECTORY/build-wrapper-win-x86.zip")
+          [System.IO.Compression.ZipFile]::ExtractToDirectory("$env:SONAR_DIRECTORY/build-wrapper-win-x86.zip", "$env:SONAR_DIRECTORY")
 
       - name: Download and install the SonarScanner
         shell: powershell
         run: |
-          $path = "$HOME/.sonar/sonar-scanner-cli-4.6.2.2472-windows.zip"
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          (New-Object System.Net.WebClient).DownloadFile("https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-windows.zip", $path)
+          $env:SONAR_SCANNER_VERSION = "4.7.0.2747"
+          $env:SONAR_DIRECTORY = [System.IO.Path]::Combine($(get-location).Path,".sonar")
+          $env:SONAR_SCANNER_HOME = "$env:SONAR_DIRECTORY/sonar-scanner-$env:SONAR_SCANNER_VERSION-windows"
+          rm $env:SONAR_SCANNER_HOME -Force -Recurse -ErrorAction SilentlyContinue
+          New-Item -path $env:SONAR_SCANNER_HOME -type directory
+          (New-Object System.Net.WebClient).DownloadFile("https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$env:SONAR_SCANNER_VERSION-windows.zip", "$env:SONAR_DIRECTORY/sonar-scanner.zip")
           Add-Type -AssemblyName System.IO.Compression.FileSystem
-          [System.IO.Compression.ZipFile]::ExtractToDirectory($path, "$HOME/.sonar")
+          [System.IO.Compression.ZipFile]::ExtractToDirectory("$env:SONAR_DIRECTORY/sonar-scanner.zip", "$env:SONAR_DIRECTORY")
+          rm ./.sonar/sonar-scanner.zip -Force -ErrorAction SilentlyContinue
+          $env:SONAR_SCANNER_OPTS="-server"
 
       - name: Build and analyse the project
-        shell: powershell
+        shell: cmd
         run: |
-          $env:Path += ";$HOME/.sonar/build-wrapper-win-x86;$HOME/.sonar/sonar-scanner-4.6.2.2472-windows/bin"
+          set PATH="%PATH%;$HOME/.sonar/build-wrapper-win-x86;$HOME/.sonar/sonar-scanner-4.6.2.2472-windows/bin"
           mkdir build
           cd build
           cmake ..
           cd ..
           build-wrapper-win-x86-64 --out-dir bw-output cmake --build build/ --config Release
-          sonar-scanner.bat "-Dsonar.cfamily.build-wrapper-output=bw-output"
+          sonar-scanner.bat -D"sonar.projectKey=cpp-cmake-macos" -D"sonar.sources=." -D"sonar.cfamily.build-wrapper-output=bw-output" -D"sonar.host.url=https://wad.eu.ngrok.io"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed because targetting SonarCloud here
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
