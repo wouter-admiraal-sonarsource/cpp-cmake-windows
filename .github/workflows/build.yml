@@ -42,7 +42,7 @@ jobs:
       - name: Build and analyse the project
         shell: powershell
         run: |
-          env:Path += ";$HOME/.sonar/build-wrapper-win-x86;$HOME/.sonar/sonar-scanner-4.7.0.2747-windows/bin"
+          $env:Path += ";$HOME/.sonar/build-wrapper-win-x86;$HOME/.sonar/sonar-scanner-4.7.0.2747-windows/bin"
           mkdir build
           cd build
           cmake ..
