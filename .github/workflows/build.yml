@@ -47,6 +47,8 @@ jobs:
           cd build
           cmake ..
           cd ..
+          ls $HOME/.sonar/build-wrapper-win-x86
+          ls $HOME/.sonar/sonar-scanner-4.7.0.2747-windows/bin
           build-wrapper-win-x86-64 --out-dir bw-output cmake --build build/ --config Release
           sonar-scanner.bat -D"sonar.projectKey=cpp-cmake-macos" -D"sonar.sources=." -D"sonar.cfamily.build-wrapper-output=bw-output" -D"sonar.host.url=https://wad.eu.ngrok.io"
         env:
